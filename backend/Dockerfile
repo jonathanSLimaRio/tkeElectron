@@ -3,20 +3,23 @@ FROM node:20
 # Define diretório de trabalho
 WORKDIR /app
 
-# Copia os arquivos de dependência primeiro (melhora o cache do Docker)
+# Copia arquivos de dependência
 COPY package*.json ./
 
-# Instala dependências do sistema (incluindo mysql-client)
+# Instala dependências do sistema
 RUN apt-get update && apt-get install -y default-mysql-client
 
-# Instala dependências da aplicação
-RUN npm install --production
+# Instala todas as dependências, incluindo @prisma/client e prisma
+RUN npm install
 
 # Instala PM2 globalmente
 RUN npm install -g pm2
 
-# Copia os arquivos da aplicação para o container
+# Copia o restante da aplicação
 COPY . .
+
+# Gera o Prisma Client
+RUN npx prisma generate
 
 # Compila o projeto TypeScript
 RUN npm run build
@@ -27,5 +30,5 @@ RUN chmod +x entrypoint.sh
 # Expõe a porta do backend
 EXPOSE 3000
 
-# Inicia o container executando o script de entrada
+# Executa o script de entrada com PM2
 CMD ["./entrypoint.sh"]
