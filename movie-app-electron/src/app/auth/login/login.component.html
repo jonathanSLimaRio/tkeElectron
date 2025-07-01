@@ -1,15 +1,37 @@
-<h2>Login</h2>
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Login</mat-label>
-    <input matInput formControlName="login" />
-  </mat-form-field>
+<div class="auth-wrapper">
+  <mat-card class="auth-card" [@fadeIn]>
+    <div class="logo-container">
+      <mat-icon class="logo-icon">movie</mat-icon>
+      <h1 class="app-title">Movie App</h1>
+    </div>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Password</mat-label>
-    <input matInput type="password" formControlName="password" />
-  </mat-form-field>
+    <mat-card-header>
+      <mat-card-title>Sign in</mat-card-title>
+    </mat-card-header>
 
-  <button mat-raised-button color="primary" type="submit">Login</button>
-  <button mat-button type="button" (click)="goToRegister()">Register</button>
-</form>
+    <mat-card-content [formGroup]="form">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Username or Email</mat-label>
+        <input matInput formControlName="login" />
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+    </mat-card-content>
+
+    <mat-card-actions class="actions">
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="form.invalid"
+        (click)="submit()"
+      >
+        Login
+      </button>
+      <button mat-button (click)="goToRegister()">Create account</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

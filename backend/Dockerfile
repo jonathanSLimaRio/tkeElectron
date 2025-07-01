@@ -1,6 +1,5 @@
 FROM node:20
 
-# Define diretório de trabalho
 WORKDIR /app
 
 # Copia arquivos de dependência
@@ -9,26 +8,25 @@ COPY package*.json ./
 # Instala dependências do sistema
 RUN apt-get update && apt-get install -y default-mysql-client
 
-# Instala todas as dependências, incluindo @prisma/client e prisma
+# Instala dependências do Node.js
 RUN npm install
 
 # Instala PM2 globalmente
 RUN npm install -g pm2
 
-# Copia o restante da aplicação
+# Copia todo o restante da aplicação
 COPY . .
 
-# Gera o Prisma Client
+# Gera Prisma Client (depois de copiar tudo, pois depende de schema)
 RUN npx prisma generate
 
-# Compila o projeto TypeScript
+# Compila o projeto
 RUN npm run build
 
-# Garante permissão de execução no script de entrada
+# Torna o script de entrada executável
 RUN chmod +x entrypoint.sh
 
-# Expõe a porta do backend
 EXPOSE 3000
 
-# Executa o script de entrada com PM2
+# Usa PM2 com o entrypoint
 CMD ["./entrypoint.sh"]

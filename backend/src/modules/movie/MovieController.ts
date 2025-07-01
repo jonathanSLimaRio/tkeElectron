@@ -6,6 +6,8 @@ import { CreateMovieSchema, CreateMovieDto } from "./dto/CreateMovieDto";
 import { UpdateMovieSchema, UpdateMovieDto } from "./dto/UpdateMovieDto";
 import { logger } from "../../config/logger";
 import { SearchOmdbSchema } from "./dto/SearchOmdbDto";
+import { SearchOmdbByTitleSchema } from "./dto/SearchOmdbByTitleDto";
+import axios from "axios";
 
 const router = Router();
 const service = new MovieService();
@@ -29,6 +31,57 @@ router.get("/movies", async (req, res) => {
   }
 });
 
+router.post("/movies", validate(CreateMovieSchema), async (req, res) => {
+  const userId = req.user!.id;
+  const dto: CreateMovieDto = req.body;
+
+  try {
+    const movie = await service.create(userId, dto);
+    return res.status(201).json(movie);
+  } catch (err) {
+    logger.error({ err, userId, dto }, "Erro ao criar filme");
+    return res.status(500).json({ error: "Erro interno" });
+  }
+});
+
+router.get("/movies/omdb", async (req, res) => {
+  const parse = SearchOmdbSchema.safeParse(req.query);
+  if (!parse.success) {
+    return res.status(400).json({ error: parse.error.flatten() });
+  }
+
+  try {
+    const result = await service.searchOmdb(parse.data);
+    return res.json(result);
+  } catch (err) {
+    logger.error({ err }, "Erro ao buscar filmes no OMDb");
+    return res.status(500).json({ error: "Erro ao buscar filmes externos" });
+  }
+});
+
+router.get("/movies/omdb-title", async (req, res) => {
+  const parse = SearchOmdbByTitleSchema.safeParse(req.query);
+  if (!parse.success) {
+    return res.status(400).json({ error: parse.error.flatten() });
+  }
+
+  try {
+    const { t, y } = parse.data;
+    const apiKey = process.env.OMDB_API_KEY;
+    const baseUrl = process.env.MOVIE_BASE_URL;
+
+    const url =
+      `${baseUrl}?apikey=${apiKey}&t=${encodeURIComponent(t)}` +
+      (y ? `&y=${y}` : "");
+
+    const response = await axios.get(url);
+    return res.json(response.data);
+  } catch (err) {
+    logger.error({ err }, "Erro ao buscar filme por título no OMDb");
+    return res.status(500).json({ error: "Erro ao buscar filme externo" });
+  }
+});
+
 router.get("/movies/:id", async (req, res) => {
   const userId = req.user!.id;
   const id = Number(req.params.id);
@@ -46,19 +99,6 @@ router.get("/movies/:id", async (req, res) => {
     return res.json(movie);
   } catch (err) {
     logger.error({ err, userId, id }, "Erro ao buscar filme");
-    return res.status(500).json({ error: "Erro interno" });
-  }
-});
-
-router.post("/movies", validate(CreateMovieSchema), async (req, res) => {
-  const userId = req.user!.id;
-  const dto: CreateMovieDto = req.body;
-
-  try {
-    const movie = await service.create(userId, dto);
-    return res.status(201).json(movie);
-  } catch (err) {
-    logger.error({ err, userId, dto }, "Erro ao criar filme");
     return res.status(500).json({ error: "Erro interno" });
   }
 });
@@ -95,21 +135,6 @@ router.delete("/movies/:id", async (req, res) => {
   } catch (err) {
     logger.error({ err, userId, id }, "Erro ao deletar filme");
     return res.status(500).json({ error: "Erro interno" });
-  }
-});
-
-router.get("/movies/omdb", async (req, res) => {
-  const parse = SearchOmdbSchema.safeParse(req.query);
-  if (!parse.success) {
-    return res.status(400).json({ error: parse.error.flatten() });
-  }
-
-  try {
-    const result = await service.searchOmdb(parse.data);
-    return res.json(result);
-  } catch (err) {
-    logger.error({ err }, "Erro ao buscar filmes no OMDb");
-    return res.status(500).json({ error: "Erro ao buscar filmes externos" });
   }
 });
 

@@ -2,16 +2,25 @@
 
 set -e
 
-echo "🔄 Aguardando o banco de dados MySQL ficar disponível..."
+echo "🔄 Waiting for MySQL database to become available..."
 
-# Espera ativa pelo MySQL na rede docker (via nome do serviço 'mysql')
-until mysqladmin ping -hmysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --silent; do
-  echo "⏳ Aguardando MySQL..."
+: "${MYSQL_HOST:=mysql}"
+: "${MYSQL_USER:=user}"
+: "${MYSQL_PASSWORD:=password}"
+
+until mysqladmin ping -h"$MYSQL_HOST" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --silent; do
+  echo "⏳ Waiting for MySQL..."
   sleep 2
 done
 
-echo "📦 Aplicando migrations com Prisma (migrate deploy)..."
-npx prisma migrate deploy
+# If no migrations exist yet, create the first one
+if [ ! -d "prisma/migrations" ] || [ -z "$(ls -A prisma/migrations)" ]; then
+  echo "📁 No migrations found. Generating and applying initial migration..."
+  npx prisma migrate dev --name init
+else
+  echo "📦 Applying existing migrations with migrate deploy..."
+  npx prisma migrate deploy
+fi
 
-echo "🚀 Iniciando via pm2-runtime no ambiente de produção..."
+echo "🚀 Starting application via pm2-runtime in production environment..."
 pm2-runtime ecosystem.config.js --env production

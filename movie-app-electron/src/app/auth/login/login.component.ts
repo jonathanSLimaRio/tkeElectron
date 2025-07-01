@@ -11,6 +11,9 @@ import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../core/services/auth.service';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { trigger, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-login',
@@ -21,9 +24,19 @@ import { AuthService } from '../../core/services/auth.service';
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
+    MatCardModule,
+    MatIconModule,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('400ms ease-out', style({ opacity: 1, transform: 'none' })),
+      ]),
+    ]),
+  ],
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;

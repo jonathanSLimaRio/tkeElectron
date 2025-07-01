@@ -1,20 +1,53 @@
-<h2>Register</h2>
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Name (optional)</mat-label>
-    <input matInput formControlName="name" />
-  </mat-form-field>
+<div class="auth-wrapper">
+  <mat-card class="auth-card" [@fadeIn]>
+    <div class="logo-container">
+      <mat-icon class="logo-icon">movie</mat-icon>
+      <h1 class="app-title">Movie App</h1>
+    </div>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Login</mat-label>
-    <input matInput formControlName="login" />
-  </mat-form-field>
+    <mat-card-header>
+      <mat-card-title>Register</mat-card-title>
+    </mat-card-header>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Password</mat-label>
-    <input matInput type="password" formControlName="password" />
-  </mat-form-field>
+    <mat-card-content [formGroup]="form">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Full Name (optional)</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
 
-  <button mat-raised-button color="primary" type="submit">Register</button>
-  <button mat-button type="button" (click)="goToLogin()">Back to Login</button>
-</form>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="login" />
+        <mat-error *ngIf="form.get('login')?.hasError('required')">
+          This field is required
+        </mat-error>
+        <mat-error *ngIf="form.get('login')?.hasError('minlength')">
+          Minimum of 3 characters
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+        <mat-error *ngIf="form.get('password')?.hasError('required')">
+          This field is required
+        </mat-error>
+        <mat-error *ngIf="form.get('password')?.hasError('minlength')">
+          Minimum of 8 characters
+        </mat-error>
+      </mat-form-field>
+    </mat-card-content>
+
+    <mat-card-actions class="actions">
+      <button
+        mat-flat-button
+        color="accent"
+        [disabled]="form.invalid"
+        (click)="submit()"
+      >
+        Register
+      </button>
+      <button mat-button (click)="goToLogin()">Back</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

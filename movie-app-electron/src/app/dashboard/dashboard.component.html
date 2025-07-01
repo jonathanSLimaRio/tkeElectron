@@ -1,9 +1,24 @@
-<h2>Meus Filmes</h2>
+<div style="display: flex; justify-content: space-between; align-items: center">
+  <h2>My Movies</h2>
+  <button mat-icon-button (click)="logout()" aria-label="Logout">
+    <mat-icon>logout</mat-icon>
+  </button>
+</div>
 
+<h3>Saved Movies</h3>
 <div style="display: flex; flex-wrap: wrap; gap: 16px">
-  <mat-card *ngFor="let movie of movies" style="width: 250px">
+  <mat-card *ngFor="let movie of localMovies" style="width: 250px">
     <img mat-card-image [src]="movie.posterUrl" *ngIf="movie.posterUrl" />
     <mat-card-title>{{ movie.title }}</mat-card-title>
     <mat-card-subtitle *ngIf="movie.year">{{ movie.year }}</mat-card-subtitle>
+  </mat-card>
+</div>
+
+<h3>OMDb Results</h3>
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+  <mat-card *ngFor="let movie of externalMovies" style="width: 250px">
+    <img mat-card-image [src]="movie.Poster" *ngIf="movie.Poster !== 'N/A'" />
+    <mat-card-title>{{ movie.Title }}</mat-card-title>
+    <mat-card-subtitle *ngIf="movie.Year">{{ movie.Year }}</mat-card-subtitle>
   </mat-card>
 </div>

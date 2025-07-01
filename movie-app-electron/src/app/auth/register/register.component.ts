@@ -11,6 +11,9 @@ import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../core/services/auth.service';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { trigger, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-register',
@@ -21,9 +24,19 @@ import { AuthService } from '../../core/services/auth.service';
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
+    MatCardModule,
+    MatIconModule,
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('400ms ease-out', style({ opacity: 1, transform: 'none' })),
+      ]),
+    ]),
+  ],
 })
 export class RegisterComponent implements OnInit {
   form!: FormGroup;
@@ -57,16 +70,13 @@ export class RegisterComponent implements OnInit {
 
     const { name, login, password } = this.form.value;
 
-    this.auth
-      .register({
-        name: name ?? '',
-        login: login ?? '',
-        password: password ?? '',
-      })
-      .subscribe({
-        next: () => this.router.navigate(['/login']),
-        error: (err) => alert(err.error?.error || 'Registration failed'),
-      });
+    this.auth.register({ name, login, password }).subscribe({
+      next: (res: any) => {
+        this.auth.saveToken(res.token);
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => alert(err.error?.error || 'Registration failed'),
+    });
   }
 
   goToLogin() {

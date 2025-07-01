@@ -1,4 +1,5 @@
 import { Router } from "express";
+import jwt from 'jsonwebtoken';
 import { AuthService } from "./AuthService";
 import { authenticateToken } from "../auth/AuthMiddleware";
 import { validate } from "../../middlewares/validate";
@@ -16,7 +17,23 @@ router.post("/register", validate(RegisterSchema), async (req, res) => {
   try {
     const user = await service.register(dto);
     logger.info({ userId: user.id }, "Usuário registrado com sucesso");
-    return res.status(201).json(user);
+
+    const token = jwt.sign(
+      { userId: user.id },
+      process.env.JWT_SECRET || "secret",
+      {
+        expiresIn: "1h",
+      }
+    );
+
+    return res.status(201).json({
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        login: user.login,
+      },
+    });
   } catch (e: any) {
     logger.error({ err: e, dto }, "Falha ao registrar usuário");
     return res.status(400).json({ error: e.message });
