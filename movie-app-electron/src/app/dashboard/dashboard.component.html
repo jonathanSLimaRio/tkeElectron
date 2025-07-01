@@ -1,24 +1,49 @@
-<div style="display: flex; justify-content: space-between; align-items: center">
-  <h2>My Movies</h2>
-  <button mat-icon-button (click)="logout()" aria-label="Logout">
-    <mat-icon>logout</mat-icon>
-  </button>
-</div>
+<div class="dashboard">
+  <header class="dashboard-header">
+    <h2>My Movies</h2>
+    <button mat-icon-button (click)="logout()" aria-label="Logout">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </header>
 
-<h3>Saved Movies</h3>
-<div style="display: flex; flex-wrap: wrap; gap: 16px">
-  <mat-card *ngFor="let movie of localMovies" style="width: 250px">
-    <img mat-card-image [src]="movie.posterUrl" *ngIf="movie.posterUrl" />
-    <mat-card-title>{{ movie.title }}</mat-card-title>
-    <mat-card-subtitle *ngIf="movie.year">{{ movie.year }}</mat-card-subtitle>
-  </mat-card>
-</div>
+  <mat-form-field appearance="outline" class="search-bar">
+    <mat-label>Search by title</mat-label>
+    <input matInput [(ngModel)]="searchQuery" (keyup.enter)="searchOmdb()" />
+    <button
+      mat-icon-button
+      matSuffix
+      aria-label="Search"
+      (click)="searchOmdb()"
+    >
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
 
-<h3>OMDb Results</h3>
-<div style="display: flex; flex-wrap: wrap; gap: 16px">
-  <mat-card *ngFor="let movie of externalMovies" style="width: 250px">
-    <img mat-card-image [src]="movie.Poster" *ngIf="movie.Poster !== 'N/A'" />
-    <mat-card-title>{{ movie.Title }}</mat-card-title>
-    <mat-card-subtitle *ngIf="movie.Year">{{ movie.Year }}</mat-card-subtitle>
-  </mat-card>
+  <section class="movies-section">
+    <h3>Saved Movies</h3>
+    <div class="movie-grid">
+      <mat-card *ngFor="let movie of localMovies" class="movie-card">
+        <img mat-card-image [src]="movie.posterUrl" *ngIf="movie.posterUrl" />
+        <mat-card-title>{{ movie.title }}</mat-card-title>
+        <mat-card-subtitle>{{ movie.year }}</mat-card-subtitle>
+      </mat-card>
+    </div>
+
+    <h3>OMDb Results</h3>
+    <div class="movie-grid">
+      <mat-card *ngFor="let movie of externalMovies" class="movie-card">
+        <img
+          mat-card-image
+          [src]="movie.Poster"
+          *ngIf="movie.Poster !== 'N/A'"
+        />
+        <mat-card-title>{{ movie.Title }}</mat-card-title>
+        <div class="movie-info">
+          <mat-card-subtitle>Type: {{ movie.Type }}</mat-card-subtitle>
+          <mat-card-subtitle>Year: {{ movie.Year }}</mat-card-subtitle>
+        </div>
+        <mat-card-subtitle>imdbID: {{ movie.imdbID }}</mat-card-subtitle>
+      </mat-card>
+    </div>
+  </section>
 </div>

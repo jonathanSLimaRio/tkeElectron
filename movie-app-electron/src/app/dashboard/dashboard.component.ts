@@ -5,23 +5,35 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../core/services/auth.service';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    FormsModule,
+    MatInputModule,
+    MatFormFieldModule,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
   localMovies: any[] = [];
   externalMovies: any[] = [];
+  searchQuery: string = 'batman';
 
   constructor(private http: HttpClient, private auth: AuthService) {}
 
   ngOnInit(): void {
     this.loadLocalMovies();
-    this.loadOmdbMovies();
+    this.searchOmdb();
   }
 
   loadLocalMovies() {
@@ -31,12 +43,17 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  loadOmdbMovies() {
-    const query = 'batman';
+  searchOmdb() {
+    const query = this.searchQuery.trim();
+    if (!query) return;
+
     this.http
       .get<any>(`http://localhost:3000/movies/omdb?s=${query}&plot=full`)
       .subscribe({
-        next: (data) => (this.externalMovies = data.Search || []),
+        next: (data) => {
+          this.externalMovies = data.Search || [];
+          this.searchQuery = '';
+        },
         error: () => alert('Error loading external movies'),
       });
   }
