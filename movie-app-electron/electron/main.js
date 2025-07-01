@@ -15,12 +15,12 @@ function createWindow() {
 
   const htmlPath = path.resolve(
     __dirname,
-    "../dist/movie-app/browser/index.html"
+    "../dist/movie-app-electron/browser/index.html"
   );
   console.log("🧩 Carregando:", htmlPath);
 
   win.loadURL(`file://${htmlPath}`);
-  win.webContents.openDevTools(); 
+  win.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);

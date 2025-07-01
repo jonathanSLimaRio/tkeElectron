@@ -1,0 +1,9 @@
+<h2>Meus Filmes</h2>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+  <mat-card *ngFor="let movie of movies" style="width: 250px">
+    <img mat-card-image [src]="movie.posterUrl" *ngIf="movie.posterUrl" />
+    <mat-card-title>{{ movie.title }}</mat-card-title>
+    <mat-card-subtitle *ngIf="movie.year">{{ movie.year }}</mat-card-subtitle>
+  </mat-card>
+</div>

@@ -1,0 +1,15 @@
+<h2>Login</h2>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Login</mat-label>
+    <input matInput formControlName="login" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Password</mat-label>
+    <input matInput type="password" formControlName="password" />
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit">Login</button>
+  <button mat-button type="button" (click)="goToRegister()">Register</button>
+</form>

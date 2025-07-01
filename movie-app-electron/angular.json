@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "movie-app": {
+    "movie-app-electron": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/movie-app",
+            "outputPath": "dist/movie-app-electron",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -32,14 +32,10 @@
               }
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.scss"
             ],
-            "scripts": [],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -69,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "movie-app:build:production"
+              "buildTarget": "movie-app-electron:build:production"
             },
             "development": {
-              "buildTarget": "movie-app:build:development"
+              "buildTarget": "movie-app-electron:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -96,6 +92,7 @@
               }
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -105,6 +102,6 @@
     }
   },
   "cli": {
-    "analytics": "60488b18-9bfe-4c35-88ef-8512e6fab4a8"
+    "analytics": "9a06c49e-1ac7-4dc6-aca5-21a6423fa053"
   }
 }
