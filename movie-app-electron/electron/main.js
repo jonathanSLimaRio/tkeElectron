@@ -2,7 +2,7 @@ const { app, BrowserWindow } = require("electron");
 const path = require("path");
 
 function createWindow() {
-  console.log("🔧 Criando janela Electron");
+  console.log("🔧 Creating window Electron");
 
   const win = new BrowserWindow({
     width: 1200,
@@ -10,6 +10,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
+      nodeIntegration: false,
     },
   });
 
@@ -17,7 +18,7 @@ function createWindow() {
     __dirname,
     "../dist/movie-app-electron/browser/index.html"
   );
-  console.log("🧩 Carregando:", htmlPath);
+  console.log("🧩 Loading:", htmlPath);
 
   win.loadURL(`file://${htmlPath}`);
   win.webContents.openDevTools();

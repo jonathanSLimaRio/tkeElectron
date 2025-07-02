@@ -8,6 +8,7 @@ import { AuthService } from '../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +21,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     FormsModule,
     MatInputModule,
     MatFormFieldModule,
+    MatTooltipModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
@@ -95,6 +97,20 @@ export class DashboardComponent implements OnInit {
         },
         error: () => alert('Error loading external movies'),
       });
+  }
+
+  openWikipedia(title: string) {
+    const formatted = title.replace(/\s+/g, '_');
+    const url = `https://en.wikipedia.org/wiki/${formatted}`;
+    console.log('Opening Wikipedia:', url);
+
+    const isElectron = !!(window as any).electronAPI;
+
+    if (isElectron) {
+      (window as any).electronAPI.openWikipedia(url);
+    } else {
+      window.open(url, '_blank');
+    }
   }
 
   logout() {

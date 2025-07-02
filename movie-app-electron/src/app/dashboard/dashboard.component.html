@@ -1,6 +1,6 @@
 <div class="dashboard">
   <header class="dashboard-header">
-    <h2>My Movies</h2>
+    <h2>My Movies Dashboard</h2>
     <button mat-icon-button (click)="logout()" aria-label="Logout">
       <mat-icon>logout</mat-icon>
     </button>
@@ -26,12 +26,23 @@
         <button
           class="favorite-button"
           mat-icon-button
+          matTooltip="Favorite"
+          matTooltipPosition="above"
           (click)="toggleFavorite(movie.imdbID)"
           aria-label="Favorite"
         >
           <mat-icon>
             {{ isFavorite(movie.imdbID) ? "favorite" : "favorite_border" }}
           </mat-icon>
+        </button>
+        <button
+          class="wikipedia-button"
+          mat-icon-button
+          matTooltip="Wikipedia"
+          matTooltipPosition="above"
+          (click)="openWikipedia(movie.Title)"
+        >
+          <mat-icon>language</mat-icon>
         </button>
         <img mat-card-image [src]="movie.Poster || movie.posterUrl" />
         <mat-card-title>{{ movie.Title || movie.title }}</mat-card-title>
@@ -44,12 +55,23 @@
         <button
           class="favorite-button"
           mat-icon-button
+          matTooltip="Favorite"
+          matTooltipPosition="above"
           (click)="toggleFavorite(movie.imdbID)"
           aria-label="Favorite"
         >
           <mat-icon>
             {{ isFavorite(movie.imdbID) ? "favorite" : "favorite_border" }}
           </mat-icon>
+        </button>
+        <button
+          class="wikipedia-button"
+          mat-icon-button
+          matTooltip="Wikipedia"
+          matTooltipPosition="above"
+          (click)="openWikipedia(movie.Title)"
+        >
+          <mat-icon>language</mat-icon>
         </button>
         <img
           mat-card-image
