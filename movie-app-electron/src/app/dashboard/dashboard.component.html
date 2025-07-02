@@ -21,27 +21,48 @@
 
   <section class="movies-section">
     <h3>Saved Movies</h3>
-    <div class="movie-grid">
+    <div class="movie-grid-local">
       <mat-card *ngFor="let movie of localMovies" class="movie-card">
-        <img mat-card-image [src]="movie.posterUrl" *ngIf="movie.posterUrl" />
-        <mat-card-title>{{ movie.title }}</mat-card-title>
-        <mat-card-subtitle>{{ movie.year }}</mat-card-subtitle>
+        <button
+          class="favorite-button"
+          mat-icon-button
+          (click)="toggleFavorite(movie.imdbID)"
+          aria-label="Favorite"
+        >
+          <mat-icon>
+            {{ isFavorite(movie.imdbID) ? "favorite" : "favorite_border" }}
+          </mat-icon>
+        </button>
+        <img mat-card-image [src]="movie.Poster || movie.posterUrl" />
+        <mat-card-title>{{ movie.Title || movie.title }}</mat-card-title>
       </mat-card>
     </div>
 
     <h3>OMDb Results</h3>
     <div class="movie-grid">
       <mat-card *ngFor="let movie of externalMovies" class="movie-card">
+        <button
+          class="favorite-button"
+          mat-icon-button
+          (click)="toggleFavorite(movie.imdbID)"
+          aria-label="Favorite"
+        >
+          <mat-icon>
+            {{ isFavorite(movie.imdbID) ? "favorite" : "favorite_border" }}
+          </mat-icon>
+        </button>
         <img
           mat-card-image
           [src]="movie.Poster"
           *ngIf="movie.Poster !== 'N/A'"
         />
         <mat-card-title>{{ movie.Title }}</mat-card-title>
+
         <div class="movie-info">
           <mat-card-subtitle>Type: {{ movie.Type }}</mat-card-subtitle>
           <mat-card-subtitle>Year: {{ movie.Year }}</mat-card-subtitle>
         </div>
+
         <mat-card-subtitle>imdbID: {{ movie.imdbID }}</mat-card-subtitle>
       </mat-card>
     </div>

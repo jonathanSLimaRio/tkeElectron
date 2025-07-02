@@ -63,8 +63,18 @@
   justify-content: space-around;
 }
 
+.movie-grid-local {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 16px;
+  padding-bottom: 8px;
+}
+
 .movie-card {
+  position: relative; // necessário para o botão absoluto
   width: 240px;
+  min-width: 240px; // 👈 para manter tamanho fixo no scroll
   background: #1e1e1e;
   color: #fff;
   text-align: center;
@@ -96,6 +106,20 @@
     mat-card-subtitle {
       font-size: 13px;
       color: #ccc;
+    }
+  }
+
+  .favorite-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+
+    mat-icon {
+      color: red;
+      font-size: 26px;
     }
   }
 }

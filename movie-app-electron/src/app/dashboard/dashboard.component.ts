@@ -28,12 +28,51 @@ export class DashboardComponent implements OnInit {
   localMovies: any[] = [];
   externalMovies: any[] = [];
   searchQuery: string = 'batman';
+  favoriteIds: Set<string> = new Set();
 
   constructor(private http: HttpClient, private auth: AuthService) {}
 
   ngOnInit(): void {
+    this.loadFavorites();
     this.loadLocalMovies();
     this.searchOmdb();
+  }
+
+  loadFavorites() {
+    const stored = localStorage.getItem('favoriteMovies');
+    this.localMovies = stored ? JSON.parse(stored) : [];
+    this.favoriteIds = new Set(this.localMovies.map((m: any) => m.imdbID));
+  }
+
+  getFavoriteMovies(): any[] {
+    const stored = localStorage.getItem('favoriteMovies');
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  toggleFavorite(imdbID: string) {
+    const favorites = this.getFavoriteMovies();
+    const alreadyFavorited = favorites.some((m: any) => m.imdbID === imdbID);
+
+    let updatedFavorites;
+
+    if (alreadyFavorited) {
+      updatedFavorites = favorites.filter((m: any) => m.imdbID !== imdbID);
+    } else {
+      const movie =
+        this.externalMovies.find((m) => m.imdbID === imdbID) ||
+        this.localMovies.find((m) => m.imdbID === imdbID);
+
+      if (!movie) return;
+
+      updatedFavorites = [...favorites, movie];
+    }
+
+    localStorage.setItem('favoriteMovies', JSON.stringify(updatedFavorites));
+    this.loadFavorites();
+  }
+
+  isFavorite(imdbID: string): boolean {
+    return this.favoriteIds.has(imdbID);
   }
 
   loadLocalMovies() {
