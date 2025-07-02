@@ -40,6 +40,7 @@ import { trigger, style, animate, transition } from '@angular/animations';
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;
+  hidePassword = true;
 
   constructor(
     private fb: FormBuilder,
@@ -71,6 +72,10 @@ export class LoginComponent implements OnInit {
         },
         error: (err) => alert(err.error?.error || 'Login failed'),
       });
+  }
+
+  togglePasswordVisibility() {
+    this.hidePassword = !this.hidePassword;
   }
 
   goToRegister() {
