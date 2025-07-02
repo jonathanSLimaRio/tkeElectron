@@ -1,122 +1,166 @@
-Aqui está uma versão aprimorada e organizada do seu `README.md`, com foco claro para **desenvolvedores que irão rodar o projeto**, separando as instruções para frontend, backend (Docker) e banco de dados com `Prisma`. Também inclui comandos com explicação e links úteis:
-
----
-
 ````md
-# Projeto de movies (Angular + Electron + Node.js + Prisma)
+# 🎬 Movie App Electron (Fullstack Desktop App)
 
-Este projeto fullstack permite cadastrar **usuários, movies e categorias**, com autenticação via JWT, usando:
+A fullstack desktop app for searching, favoriting, and managing movies using:
 
-- **Frontend:** Angular + Electron
-- **Backend:** Node.js + Express + Prisma
-- **Banco de dados:** MySQL (via Docker)
+- 💻 **Frontend**: Angular + Angular Material + Electron
+- 🔐 **Backend**: Node.js + Express + Prisma + JWT
+- 🗄️ **Database**: MySQL (via Docker)
 
 ---
 
-## 🧰 Pré-requisitos
+## 🚀 Features
 
-- [Docker](https://www.docker.com/)
+- User authentication with login/register (JWT)
+- Search movies using the OMDb API
+- View and favorite movies locally
+- Quick access to movie’s Wikipedia page
+- Full **CRUD for movies is implemented on the backend**
+- Category management (CRUD)
+- Interactive Swagger documentation
+
+⚠️ **Movie creation/edit/delete is not yet implemented on the frontend**.
+
+---
+
+## 🧰 Requirements
+
 - [Node.js](https://nodejs.org/)
-- [Yarn](https://yarnpkg.com/) ou [npm](https://www.npmjs.com/)
+- [Docker + Docker Compose](https://www.docker.com/)
+- [Angular CLI](https://angular.io/cli) → `npm install -g @angular/cli`
+
+> Electron is included as a project dependency.
 
 ---
 
-## ⚙️ Como executar o projeto
+## 🧪 Running the Project
 
-### 1. Suba o backend e banco de dados (Docker)
+### 1. Clone the repository
 
-Execute o seguinte comando na raiz do projeto:
-
-```sh
-docker-compose up -d
+```bash
+git clone https://github.com/your-user/movie-app-electron.git
+cd movie-app-electron
+```
 ````
 
-Isso iniciará:
+### 2. Start backend and database (Docker)
 
-* MySQL (`localhost:3306`)
-* Backend Node.js (`localhost:3000`)
+```bash
+docker-compose up -d
+```
 
-> Obs.: o Swagger estará disponível em `http://localhost:3000/api-docs`
+This will start:
+
+- 🐬 MySQL on `localhost:3306`
+- 🚀 Node.js backend on `http://localhost:3000`
+
+> Swagger UI available at: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
 
 ---
 
-### 2. Sincronize o banco com o Prisma
+### 3. Sync Prisma schema to the database
 
-Após o container `backend` estar rodando, execute:
-
-```sh
+```bash
 docker exec -it backend sh
 npx prisma db push
 ```
 
-Isso cria as tabelas no MySQL com base no schema atual do Prisma.
+This command will create the required tables in the MySQL database.
 
 ---
 
-### 3. Inicie o frontend
+### 4. Run the desktop app (Electron)
 
+> Make sure the backend is running at `http://localhost:3000`.
 
+```bash
+npm install
+npm run electron:build
+```
 
-> Certifique-se de que o backend (`localhost:3000`) esteja ativo para que as requisições funcionem corretamente.
+This will compile the Angular app and start it with Electron.
 
 ---
 
-## 📁 Estrutura do Projeto
+## 🗂️ Project Structure
 
 ```
-/
-├── backend/         # Backend Node.js + Express + Prisma
-├── frontend/        # 
+movie-app-electron/
+├── backend/           # Node.js + Prisma backend
+├── electron/          # Electron startup (main.js, preload.js)
+├── src/               # Angular frontend
 ├── docker-compose.yml
 └── README.md
 ```
 
 ---
 
-## ✅ Funcionalidades
+## 🔐 Authentication
 
-* Cadastro e login de usuários
-* Search movies
-* CRUD de movies
-* CRUD de categorias
-* Autenticação com JWT
-* Integração total via REST
-* Documentação automática via Swagger
+- User registration and login with strong password rules
+- JWT token stored locally
+- HTTP interceptor for authenticated requests
 
 ---
 
-## 🚀 Tecnologias Usadas
+## 📚 API & Documentation
 
-* **Frontend:** 
-* **Backend:** Express, TypeScript, Prisma ORM
-* **Database:** MySQL (Docker)
-* **Autenticação:** JWT
+- Swagger: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+- Health Check:
 
----
-
-## 🧪 Documentação da API
-
-Disponível via Swagger:
-
-```
-http://localhost:3000/api-docs
-```
-
-## 🧪 SAÚDE da API
-
-```
-  console.log("Health endpoint at http://localhost:3000/health");
-  console.log("Health DB endpoint at http://localhost:3000/health/db");
-```
+  - API: `http://localhost:3000/health`
+  - DB: `http://localhost:3000/health/db`
 
 ---
 
-## 🛠️ Recomendações de IDE
+## ✅ Development Checklist
 
-* [VS Code](https://code.visualstudio.com/)
-
-  * Extensão recomendada: [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
-  * Desative o [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur) para evitar conflitos
+- [x] User login & registration
+- [x] JWT authentication
+- [x] Movie search (OMDb API)
+- [x] Local favorites management
+- [x] Wikipedia link integration
+- [x] CRUD for movies (backend only)
+- [x] CRUD for categories
+- [x] Swagger API docs
+- [x] Electron integration
+- [x] GPT Integration
+- [❌] View Details was not implemented because it was removed from the API, so I added an implementation using ChatGPT.
+- [ ] Movie creation/editing from frontend ❌ _(not implemented yet)_
 
 ---
 
+## 🧪 Testing
+
+```bash
+cd backend
+npm run test
+```
+
+> Uses Jest for unit testing core features.
+
+---
+
+## 👨‍💻 Author
+
+Developed by **Jonathan Lima**
+Project for a fullstack technical challenge.
+
+---
+
+## 🔮 Suggestions for Improvement
+
+- Add movie creation UI in the frontend
+- Enable movie editing and deletion from the dashboard
+- Allow persistent favorites using the backend
+- Add support for user avatars or movie poster uploads
+
+---
+
+## 📄 License
+
+This project is for educational and technical evaluation purposes only.
+
+```
+
+```
