@@ -16,7 +16,7 @@ done
 # If no migrations exist yet, create the first one
 if [ ! -d "prisma/migrations" ] || [ -z "$(ls -A prisma/migrations)" ]; then
   echo "📁 No migrations found. Generating and applying initial migration..."
-  npx prisma migrate dev --name init
+  npx prisma migrate reset --force --skip-seed
 else
   echo "📦 Applying existing migrations with migrate deploy..."
   npx prisma migrate deploy

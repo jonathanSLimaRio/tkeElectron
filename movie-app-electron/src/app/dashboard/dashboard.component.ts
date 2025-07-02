@@ -9,6 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { GptModalComponent } from './modal/gpt-modal.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,6 +24,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatInputModule,
     MatFormFieldModule,
     MatTooltipModule,
+    MatDialogModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
@@ -32,7 +35,11 @@ export class DashboardComponent implements OnInit {
   searchQuery: string = 'batman';
   favoriteIds: Set<string> = new Set();
 
-  constructor(private http: HttpClient, private auth: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private auth: AuthService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.loadFavorites();
@@ -111,6 +118,34 @@ export class DashboardComponent implements OnInit {
     } else {
       window.open(url, '_blank');
     }
+  }
+
+  resumeByGPT(title: string, imdbID: string) {
+    const dialogRef = this.dialog.open(GptModalComponent, {
+      data: { summary: '' },
+    });
+
+    const token = this.auth.getToken();
+
+    this.http
+      .post<{ summary: string }>(
+        'http://localhost:3000/chatgpt/resume',
+        { title, imdbID },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .subscribe({
+        next: (res) => {
+          dialogRef.componentInstance.data.summary = res.summary;
+        },
+        error: () => {
+          dialogRef.componentInstance.data.summary =
+            'Failed to load summary from GPT.';
+        },
+      });
   }
 
   logout() {

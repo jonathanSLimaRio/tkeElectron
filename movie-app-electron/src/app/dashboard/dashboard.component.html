@@ -52,6 +52,12 @@
         </button>
         <img mat-card-image [src]="movie.Poster || movie.posterUrl" />
         <mat-card-title>{{ movie.Title || movie.title }}</mat-card-title>
+        <div
+          class="movie-resume"
+          (click)="resumeByGPT(movie.Title, movie.imdbID)"
+        >
+          <mat-card-subtitle>View a resume by GPT</mat-card-subtitle>
+        </div>
       </mat-card>
     </div>
 
@@ -92,6 +98,12 @@
         </div>
 
         <mat-card-subtitle>imdbID: {{ movie.imdbID }}</mat-card-subtitle>
+        <div
+          class="movie-resume"
+          (click)="resumeByGPT(movie.Title, movie.imdbID)"
+        >
+          <mat-card-subtitle>View a resume by GPT</mat-card-subtitle>
+        </div>
       </mat-card>
     </div>
   </section>

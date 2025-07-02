@@ -138,4 +138,32 @@ router.delete("/movies/:id", async (req, res) => {
   }
 });
 
+router.post("/chatgpt/resume", async (req, res) => {
+  const { title, imdbID } = req.body;
+
+  try {
+    const prompt = `Provide a short movie summary for "${title}" (IMDB ID: ${imdbID}). Include key actors and the characters they play.`;
+
+    const response = await axios.post(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.7,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        },
+      }
+    );
+
+    const result = response.data.choices[0].message.content;
+    res.json({ summary: result });
+  } catch (error) {
+    console.error("GPT error:", error);
+    res.status(500).json({ error: "Failed to generate summary" });
+  }
+});
+
 export default router;

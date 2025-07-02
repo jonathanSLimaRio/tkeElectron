@@ -157,6 +157,27 @@ Project for a fullstack technical challenge.
 
 ---
 
+## Docker with Prisma
+1. Access the backend container:
+docker exec -it backend sh
+
+2. Inside the container, generate the initial migration:
+npx prisma migrate dev --name init
+ℹ️ Why this may be necessary:
+Even though your backend is running inside Docker and Prisma is configured, the error:
+
+The table `users` does not exist in the current database.
+means that no migration has been applied yet, or the tables were not created in the MySQL database. This usually happens when:
+
+You didn’t run npx prisma migrate dev at least once
+
+You reset or rebuilt the database container, which erased the schema
+You only ran prisma generate, which builds the client but doesn’t modify the database
+By running npx prisma migrate dev --name init, you’ll:
+Create the migrations folder with SQL for your schema
+Apply the schema to the MySQL database (creating the tables)
+Allow your backend code to finally interact with the database
+
 ## 📄 License
 
 This project is for educational and technical evaluation purposes only.
