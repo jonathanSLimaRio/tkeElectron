@@ -62,7 +62,7 @@ This will start:
 
 ```bash
 docker exec -it backend sh
-npx prisma db push
+npx prisma migrate dev --name init
 ```
 
 This command will create the required tables in the MySQL database.
