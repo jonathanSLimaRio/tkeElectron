@@ -2,31 +2,32 @@ FROM node:20
 
 WORKDIR /app
 
-# Copia arquivos de dependência
+# Copy dependency files
 COPY package*.json ./
 
-# Instala dependências do sistema
-RUN apt-get update && apt-get install -y default-mysql-client
+# Install system dependencies (e.g., MySQL client)
+RUN apt-get update && apt-get install -y default-mysql-client dos2unix
 
-# Instala dependências do Node.js
+# Install Node.js dependencies
 RUN npm install
 
-# Instala PM2 globalmente
+# Install PM2 globally
 RUN npm install -g pm2
 
-# Copia todo o restante da aplicação
+# Copy the rest of the application
 COPY . .
 
-# Gera Prisma Client (depois de copiar tudo, pois depende de schema)
+# Convert entrypoint.sh to Unix format and make it executable
+RUN dos2unix entrypoint.sh && chmod +x entrypoint.sh
+
+# Generate Prisma Client
 RUN npx prisma generate
 
-# Compila o projeto
+# Build the application
 RUN npm run build
 
-# Torna o script de entrada executável
-RUN chmod +x entrypoint.sh
-
+# Expose application port
 EXPOSE 3000
 
-# Usa PM2 com o entrypoint
-CMD ["./entrypoint.sh"]
+# Run the application using PM2 and entrypoint
+ENTRYPOINT ["/bin/bash", "./entrypoint.sh"]
